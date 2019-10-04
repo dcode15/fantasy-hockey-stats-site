@@ -30,7 +30,7 @@
                           class="elevation-1">
             </v-data-table>
         </v-card>
-        <v-navigation-drawer v-model="scoringDrawerOpen" absolute temporary>
+        <v-navigation-drawer v-model="scoringDrawerOpen" app temporary>
             <v-list dense>
                 <v-list-item>
                     <v-list-item-content>
@@ -57,10 +57,6 @@
                                 label="Penalty Minutes"
                         ></v-text-field>
                         <v-text-field
-                                v-model="scoring.SHG"
-                                label="Shorthanded Goals"
-                        ></v-text-field>
-                        <v-text-field
                                 v-model="scoring.SOG"
                                 label="Shots"
                         ></v-text-field>
@@ -71,6 +67,38 @@
                         <v-text-field
                                 v-model="scoring.BLK"
                                 label="Blocks"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.SHG"
+                                label="Shorthanded Goals"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.SHA"
+                                label="Shorthanded Assists"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.SHP"
+                                label="Shorthanded Points"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.PPG"
+                                label="Powerplay Goals"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.PPA"
+                                label="Powerplay Assists"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.PPP"
+                                label="Powerplay Points"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.GWG"
+                                label="Game Winning Goals"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.DEF"
+                                label="Defenseman Points"
                         ></v-text-field>
                     </v-list-item-content>
                 </v-list-item>
@@ -86,6 +114,18 @@
                         <v-text-field
                                 v-model="scoring.GS"
                                 label="Games Started"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.W"
+                                label="Wins"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.L"
+                                label="Losses"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.SO"
+                                label="Shutouts"
                         ></v-text-field>
                         <v-text-field
                                 v-model="scoring.GA"
@@ -124,13 +164,24 @@
             scoring: {
                 G: 5,
                 A: 2.94,
+                PTS: 0,
                 PM: 0.66,
                 PIM: -0.32,
-                SHG: 0.59,
                 SOG: 0.45,
                 HIT: 0.12,
                 BLK: 0.24,
+                GWG: 0,
+                PPG: 0,
+                PPA: 0,
+                PPP: 0,
+                SHG: 0.59,
+                SHA: 0,
+                SHP: 0,
+                DEF: 0,
                 GS: 5,
+                W: 0,
+                L: 0,
+                SO: 0,
                 GA: -5,
                 SV: 0.45
             },
@@ -220,15 +271,26 @@
 
                 if (position !== "G") {
                     if (stats !== null) {
-                        total = stats.goals * this.scoring.G + stats.assists * this.scoring.A + stats.plusMinus * this.scoring.PM
+                        total = stats.goals * this.scoring.G + stats.assists * this.scoring.A
+                            + stats.plusMinus * this.scoring.PM
                             + stats.pim * this.scoring.PIM + stats.shortHandedGoals * this.scoring.SHG
                             + stats.shots * this.scoring.SOG + stats.hits * this.scoring.HIT
-                            + stats.blocked * this.scoring.BLK;
+                            + stats.blocked * this.scoring.BLK + stats.gameWinningGoals * this.scoring.GWG
+                            + stats.powerPlayGoals * this.scoring.PPG
+                            + (stats.powerPlayPoints - stats.powerPlayGoals) * this.scoring.PPA
+                            + stats.powerPlayPoints * this.scoring.PPP
+                            + (stats.shortHandedPoints - stats.shortHandedGoals) * this.scoring.SHA
+                            + stats.shortHandedPoints * this.scoring.SHP;
+
+                        if (position === "D") {
+                            total += (stats.points * this.scoring.DEF)
+                        }
                     }
                 } else {
                     if (stats !== null) {
                         total = stats.gamesStarted * this.scoring.GS + stats.saves * this.scoring.SV
-                            + stats.goalsAgainst * this.scoring.GA
+                            + stats.goalsAgainst * this.scoring.GA + stats.wins * this.scoring.W
+                            + stats.losses * this.scoring.L + stats.shutouts * this.scoring.SO
                     }
                 }
 
