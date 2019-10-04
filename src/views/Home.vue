@@ -4,6 +4,9 @@
             <v-card-title>
                 Players
                 <div class="flex-grow-1"></div>
+                <v-btn @click="scoringDrawerOpen = !scoringDrawerOpen" color="primary" class="mr-10 mt-2">Adjust
+                    Scoring
+                </v-btn>
                 <v-select
                         :items="positions"
                         label="Position"
@@ -15,6 +18,7 @@
                         label="Search Players by Name"
                         single-line
                         hide-details
+                        clearable
                 ></v-text-field>
             </v-card-title>
             <v-data-table :headers="headers"
@@ -26,6 +30,75 @@
                           class="elevation-1">
             </v-data-table>
         </v-card>
+        <v-navigation-drawer v-model="scoringDrawerOpen" absolute temporary>
+            <v-list dense>
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-list-item-title>Skater Scoring
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-text-field
+                                v-model="scoring.G"
+                                label="Goals"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.A"
+                                label="Assists"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.PM"
+                                label="+/-"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.PIM"
+                                label="Penalty Minutes"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.SHG"
+                                label="Shorthanded Goals"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.SOG"
+                                label="Shots"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.HIT"
+                                label="Hits"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.BLK"
+                                label="Blocks"
+                        ></v-text-field>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-list-item-title>Goalie Scoring
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-text-field
+                                v-model="scoring.GS"
+                                label="Games Started"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.GA"
+                                label="Goals Against"
+                        ></v-text-field>
+                        <v-text-field
+                                v-model="scoring.SV"
+                                label="Saves"
+                        ></v-text-field>
+                    </v-list-item-content>
+                </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
     </v-container>
 </template>
 
@@ -37,6 +110,7 @@
             search: null,
             positionFilter: "All",
             playerData: playersJSON,
+            scoringDrawerOpen: false,
             positions: [
                 "All",
                 "Skaters",
